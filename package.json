@@ -1,0 +1,75 @@
+{
+  "name": "xmuoj",
+  "displayName": "XMUOJ",
+  "description": "在 VS Code 中完成 XMUOJ 的找题、读题、写代码、本地测试和提交。",
+  "version": "0.0.1",
+  "publisher": "andylishengrui",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:xmuoj.login",
+    "onCommand:xmuoj.browseProblemSets",
+    "onCommand:xmuoj.openProblem",
+    "onCommand:xmuoj.runLocalTests",
+    "onCommand:xmuoj.submitCurrentFile",
+    "onCommand:xmuoj.viewSubmissionHistory",
+    "onCommand:xmuoj.clearSubmissionHistory"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "XMUOJ",
+      "properties": {
+        "xmuoj.baseUrl": {
+          "type": "string",
+          "default": "https://xmuoj.com/api",
+          "description": "XMUOJ API base URL"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "xmuoj.login",
+        "title": "XMUOJ: 登录"
+      },
+      {
+        "command": "xmuoj.browseProblemSets",
+        "title": "XMUOJ: 浏览题库"
+      },
+      {
+        "command": "xmuoj.openProblem",
+        "title": "XMUOJ: 打开题目"
+      },
+      {
+        "command": "xmuoj.runLocalTests",
+        "title": "XMUOJ: 本地运行测试"
+      },
+      {
+        "command": "xmuoj.submitCurrentFile",
+        "title": "XMUOJ: 提交当前文件"
+      },
+      {
+        "command": "xmuoj.viewSubmissionHistory",
+        "title": "XMUOJ: 查看提交历史"
+      },
+      {
+        "command": "xmuoj.clearSubmissionHistory",
+        "title": "XMUOJ: 清理提交历史"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "npm run build && node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.5"
+  }
+}
