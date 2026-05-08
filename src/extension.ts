@@ -10,6 +10,8 @@ const execFileAsync = promisify(execFile);
 const STATE_CURRENT_PROBLEM = 'xmuoj.currentProblem';
 const STATE_LAYOUT = 'xmuoj.layout';
 const STATE_HISTORY = 'xmuoj.submissionHistory';
+const MAX_SUBMISSION_HISTORY = 300;
+const EXECUTION_TIMEOUT_MS = 10_000;
 
 type ProblemType = 'public' | 'contest';
 
@@ -388,7 +390,7 @@ async function fetchProblemList(context: vscode.ExtensionContext, type: ProblemT
   }
 
   return type === 'contest'
-    ? [{ id: 'C1001', title: 'Contest A + B', type: 'contest', allowedLanguages: ['C', 'C++', 'Java', 'Python3'], contestStartAt: new Date(Date.now() - 3600_000).toISOString(), contestEndAt: new Date(Date.now() + 3600_000).toISOString() }]
+    ? [{ id: 'C1001', title: 'Contest A + B', type: 'contest', allowedLanguages: ['C', 'C++', 'Java', 'Python3'], contestStartAt: '2099-01-01T00:00:00Z', contestEndAt: '2099-01-01T05:00:00Z' }]
     : [{ id: 'P1000', title: 'A + B Problem', type: 'public', allowedLanguages: ['C', 'C++', 'Java', 'Python3'] }];
 }
 
@@ -470,7 +472,7 @@ function renderStatement(problem: Problem): string {
 async function addHistory(context: vscode.ExtensionContext, record: SubmissionRecord): Promise<void> {
   const history = context.globalState.get<SubmissionRecord[]>(STATE_HISTORY, []);
   history.push(record);
-  await context.globalState.update(STATE_HISTORY, history.slice(-300));
+  await context.globalState.update(STATE_HISTORY, history.slice(-MAX_SUBMISSION_HISTORY));
 }
 
 async function prepareExecutable(language: string, sourceFile: string, output: vscode.OutputChannel): Promise<string> {
@@ -557,7 +559,7 @@ function runCommandWithInput(command: string, args: string[], input: string): Pr
         child.kill();
         reject(new Error(`执行超时：${command}`));
       }
-    }, 10_000);
+    }, EXECUTION_TIMEOUT_MS);
 
     child.stdout.on('data', (data: Buffer | string) => {
       stdout += data.toString();
